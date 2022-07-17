@@ -56,6 +56,10 @@ func HeadersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 // Start /** Starts the web server listener on given host and port.
 func Start(host string, port int) {
 	router := mux.NewRouter()
@@ -64,6 +68,7 @@ func Start(host string, port int) {
 	router.HandleFunc("/bad", BadHandler)
 	router.HandleFunc("/data", DataHandler)
 	router.HandleFunc("/headers", HeadersHandler)
+	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 
 	log.Println(fmt.Printf("Starting API server on %s:%d\n", host, port))
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), router); err != nil {
